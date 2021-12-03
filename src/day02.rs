@@ -22,24 +22,22 @@ fn main() -> Result<(), Error> {
                 _ => unreachable!(),
             }
         });
-    println!("Position (1): {:?}", p * d);
+    println!("Final Position (1): {:?}", p * d);
 
     // Second part
-    let x = data.lines().fold((0, 0, 0), |state, l| {
-        let (p, d, a) = state;
-        let arr: Vec<&str> = l.split(' ').collect();
-        match arr[1].parse::<u32>() {
-            Ok(num) => match arr[0] {
-                "forward" => (p + num, d + (num * a), a),
-                "down" => (p, d, a + num),
-                "up" => (p, d, a - num),
-                _ => (p, d, a),
+    #[rustfmt::skip]
+    let (p, d, _) = data.lines()
+        .map(|l| l.split_once(" ").unwrap())
+        .fold((0, 0, 0), |(p, d, a), (k, v)|
+            match (k, v.parse::<i32>().unwrap()) {
+                ("forward", v) => (p + v, d + (v * a), a),
+                ("down", v) => (p, d, a + v),
+                ("up", v) => (p, d, a - v),
+                _ => unreachable!(),
             },
-            _ => (p, d, a),
-        }
-    });
+    );
 
-    println!("Position (2): {:?}", x.0 * x.1);
+    println!("Final Position (2): {:?}", p * d);
 
     Ok(())
 }
