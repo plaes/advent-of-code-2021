@@ -11,42 +11,18 @@ fn main() -> Result<(), Error> {
     let data = include_str!("../data/day02.txt");
 
     // let data = _DATA;
-    let (position, depth): (Vec<&str>, Vec<&str>) =
-        data.lines().partition(|&l| l.starts_with("forward"));
-
-    // first part
-    let pos: u32 = position
-        .iter()
-        .filter_map(|l| {
-            let arr: Vec<&str> = l.split(' ').collect();
-            arr[1].parse::<u32>().ok()
-        })
-        .collect::<Vec<u32>>()
-        .iter()
-        .sum();
-
-    // println!("pos: {:?}", pos);
-
-    let depth: i32 = depth
-        .iter()
-        .filter_map(|l| {
-            let arr: Vec<&str> = l.split(' ').collect();
-            //println!("{:?}", arr);
-            match arr[1].parse::<i32>() {
-                Ok(num) => match arr[0] {
-                    "down" => Some(num),
-                    "up" => Some(-num),
-                    _ => None,
-                },
-                _ => None,
+    let (p, d) = data
+        .lines()
+        .map(|l| l.split_once(" ").unwrap())
+        .fold((0, 0), |(p, d), (k, v)| {
+            match (k, v.parse::<i32>().unwrap()) {
+                ("forward", v) => (p + v, d),
+                ("down", v) => (p, d + v),
+                ("up", v) => (p, d - v),
+                _ => unreachable!(),
             }
-        })
-        .collect::<Vec<i32>>()
-        .iter()
-        .sum();
-
-    //println!("depth: {:?}", depth);
-    println!("Position (1): {:?}", pos as i32 * depth);
+        });
+    println!("Position (1): {:?}", p * d);
 
     // Second part
     let x = data.lines().fold((0, 0, 0), |state, l| {
