@@ -23,34 +23,26 @@ fn main() {
 
     //let data = _DATA;
 
-    let (numbers, tables): (Vec<u32>, Vec<Vec<u32>>) =
-        data.lines()
-            .enumerate()
-            .fold((vec![], vec![]), |(n, mut t), (i, r)| {
-                if i == 0 {
-                    // Filter out bingo numbers
-                    (r.split(",").map(|l| l.parse::<u32>().unwrap()).collect(), t)
-                } else {
-                    // Start building the tables...
-                    if r.len() == 0 {
-                        // Create new board...
-                        t.insert(0, vec![]);
-                    } else {
-                        // Parse board row
-                        t[0].append(
-                            &mut r.split(" ").filter_map(|l| l.parse::<u32>().ok()).collect(),
-                        );
-                    }
-                    (n, t)
-                }
-            });
-    /*
-    println!("{:?}", numbers);
-    println!("{:?}", tables);
-    */
+    let (num_raw, table_raw) = data.split_once("\n\n").unwrap();
+
+    let tables: Vec<Vec<u32>> = table_raw
+        .split("\n\n")
+        .map(|t| {
+            t.split_whitespace()
+                .map(|n| n.parse::<u32>().unwrap())
+                .collect()
+        })
+        .collect();
+
     let mut rows = vec![vec![vec![] as Vec<u32>; 5]; tables.len()];
     let mut cols = vec![vec![vec![] as Vec<u32>; 5]; tables.len()];
     let mut solved: bool = false;
+
+    let numbers: Vec<u32> = num_raw
+        .split(',')
+        .map(|l| l.parse::<u32>().unwrap())
+        .collect();
+
     for n in &numbers {
         // Attempt to find numbers...
         for (i, t) in tables.iter().enumerate() {
