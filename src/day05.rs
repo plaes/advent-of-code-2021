@@ -37,6 +37,7 @@ fn main() {
             if a[0] == b[0] || a[1] == b[1] {
                 Some((a, b))
             } else {
+                // println!("{:?}", t);
                 None
             }
         })
@@ -69,20 +70,18 @@ fn main() {
             // TODO: #![feature(iter_zip)] ?
             let a: Vec<_> = c1
                 .splitn(2, ',')
-                .map(|c| c.parse::<u32>().unwrap())
+                .map(|c| c.parse::<i32>().unwrap())
                 .collect();
             let b: Vec<_> = c2
                 .splitn(2, ',')
-                .map(|c| c.parse::<u32>().unwrap())
+                .map(|c| c.parse::<i32>().unwrap())
                 .collect();
             // ...and filter out non-vert/horiz lines
             if a[0] == b[0] || a[1] == b[1] {
                 Some((a, b))
             } else {
                 // Check for diagonals
-                let a1 = max(a[0], b[0]) - min(a[0], b[0]);
-                let b1 = max(a[1], b[1]) - min(a[1], b[1]);
-                if a1 == b1 {
+                if (a[0] - b[0]).abs() == (a[1] - b[1]).abs() {
                     Some((a, b))
                 } else {
                     None
@@ -113,15 +112,14 @@ fn main() {
         } else {
             // Diagonals
             // println!("DIAG: {:?}{:?}", a, b);
-            let mxx = max(x0, x1);
-            let mnx = min(x0, x1);
+            let diff = (x0 - x1).abs();
 
             let dx: i32 = if x0 > x1 { -1 } else { 1 };
             let dy: i32 = if y0 > y1 { -1 } else { 1 };
 
             // We only need to check single coord...
-            for i in 0..=(mxx - mnx) {
-                let idx = (y0 as i32 + (dy * i as i32)) * 10 + x0 as i32 + (dx * i as i32);
+            for i in 0..=diff {
+                let idx = (y0 + (dy * i)) * N as i32 + x0 + (dx * i);
                 // println!("{}", idx);
                 board[idx as usize] += 1;
             }
