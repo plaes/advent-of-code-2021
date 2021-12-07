@@ -23,22 +23,17 @@ fn main() {
         });
 
         arr.append(&mut vec![8; new]);
-        println!("{:?}", _day);
     }
     println!("Number of lanternfish (part1) {:?}", arr.len());
 
     // Part 2
-    let mut c = vec![0; 9];
+    let mut c = data.trim().split(',').fold([0; 9], |mut m, n| {
+        m[n.parse::<usize>().unwrap()] += 1;
+        m
+    });
 
-    // Buld initial buckets
-    for age in data.trim().split(',').map(|n| n.parse::<usize>().unwrap()) {
-        c[age] += 1;
-    }
-
-    println!("{:?}", c);
     for _day in 1..=256 {
-        let mut new = 0;
-        new = c[0];
+        let new = c[0];
         c[0] = c[1];
         c[1] = c[2];
         c[2] = c[3];
