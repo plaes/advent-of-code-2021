@@ -15,5 +15,25 @@ fn main() {
     let mid = arr.len() / 2;
     let mean = *arr.select_nth_unstable(mid).1;
 
-    println!("Required fuel (part 1): {}", arr.iter().map(|x| (*x - mean).abs()).sum::<i32>());
+    println!(
+        "Required fuel (part 1): {}",
+        arr.iter().map(|x| (*x - mean).abs()).sum::<i32>()
+    );
+
+    // Part 2
+    // n + (n + 1) + (n + 2) + (n + 3) .. -> n(n + 1) ?
+
+    let avg: i32 = arr.iter().sum::<i32>() / arr.len() as i32;
+    let res = ((avg - 2)..=(avg + 2))
+        .map(|x| {
+            arr.iter()
+                .map(|n| {
+                    let d = (x - n).abs();
+                    d * (d + 1) / 2
+                })
+                .sum::<i32>()
+        })
+        .min()
+        .unwrap();
+    println!("Required fuel (part 2): {}", res);
 }
