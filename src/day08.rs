@@ -24,10 +24,7 @@ fn main() {
             .map(|l| {
                 let (_, out) = l.split_once(" | ").unwrap();
                 out.split(' ')
-                    .filter(|o| match o.len() {
-                        2 | 4 | 3 | 7 => true,
-                        _ => false,
-                    })
+                    .filter(|o| matches!(o.len(), 2 | 4 | 3 | 7))
                     .count()
             })
             .sum::<usize>()
