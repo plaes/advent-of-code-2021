@@ -6,51 +6,38 @@ const _DATA: &str = "2199943210
 
 fn main() {
     let data = include_str!("../data/day09.txt");
-    // let data = _DATA;
+    //let data = _DATA;
 
     // Part 1
     // Parse board
-    let board: Vec<Vec<_>> = data
+    let board = data
         .lines()
         .map(|l| {
             l.chars()
-                .map(|n| n.to_string().parse::<u8>().unwrap())
+                .map(|n| n.to_string().parse::<u32>().unwrap())
                 .collect()
         })
-        .collect();
+        .collect::<Vec<Vec<_>>>();
 
-    let mut mins: Vec<(u8, usize, usize)> = vec![];
+    // Part 1
+    let adjacent = [(-1, 0), (0, -1), (1, 0), (0, 1)];
 
-    // Find horizontal mins
-    let _x: Vec<_> = board
-        .iter()
-        .enumerate()
-        .map(|(i, l)| {
-            if l[0] < l[1] {
-                mins.insert(0, (l[0], i, 0));
+    let mut sum = 0;
+    for (y, line) in board.iter().enumerate() {
+        for (x, item) in line.iter().enumerate() {
+            if adjacent.iter().all(|(xx, yy)| {
+                let f = board.get((y as isize + yy) as usize);
+                let ff = f.and_then(|l| l.get((x as isize + xx) as usize));
+                let fff = ff.map(|n| item < n);
+                fff.unwrap_or(true)
+            }) {
+                sum += item + 1;
             }
-            for (j, n) in l.windows(3).enumerate() {
-                if n[0] > n[1] && n[1] < n[2] {
-                    mins.insert(0, (n[1], i, j + 1));
-                }
-            }
-            if l[l.len() - 2] > l[l.len() - 1] {
-                mins.insert(0, (l[l.len() - 1], i, l.len() - 1));
-            }
-        })
-        .collect();
-    let result: u32 = mins
-        .iter()
-        .filter_map(|(n, i, j)| {
-            if i > &0 && n > &board[*i as usize - 1][*j] {
-                return None;
-            }
-            if i < &(board.len() - 1) && n > &board[*i as usize + 1][*j] {
-                return None;
-            }
-            Some(*n as u32 + 1)
-        })
-        .sum();
-    println!("{:?}", result);
-    // println!("{:?}", board);
+        }
+    }
+    println!("Sum of risk levels of all low points (part1): {:?}", sum);
+
+    // Part 2
+    // WIP: Find all 9?
+    // TODO
 }
