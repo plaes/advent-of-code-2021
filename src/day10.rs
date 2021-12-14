@@ -77,8 +77,9 @@ fn main() {
             //println!("{}", line_score);
         }
     }
-    //&scores.select_nth_unstable(&scores.len() / 2);
-    let num = &scores.len() / 2;
-    let (_, avg, _) = &scores.select_nth_unstable(num);
-    println!("Middle score for incomplete lines (part2): {:?}", avg);
+    let mid = &scores.len() / 2;
+    println!(
+        "Middle score for incomplete lines (part2): {:?}",
+        scores.select_nth_unstable(mid).1
+    );
 }
