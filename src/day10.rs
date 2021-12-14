@@ -15,17 +15,12 @@ fn main() {
     let data = include_str!("../data/day10.txt");
     //let data = _DATA;
 
-    let elem: HashMap<char, char> = HashMap::from([
-        (')', '('),
-        (']', '['),
-        ('}', '{'),
-        ('>', '<'),
-    ]);
+    let elem: HashMap<char, char> = HashMap::from([(')', '('), (']', '['), ('}', '{'), ('>', '<')]);
 
     let mut sum = 0;
 
-    let mut stack: Vec<char> = vec![];
     for line in data.lines() {
+        let mut stack: Vec<char> = vec![];
         for c in line.chars() {
             if matches!(c, '(' | '[' | '{' | '<') {
                 stack.push(c);
